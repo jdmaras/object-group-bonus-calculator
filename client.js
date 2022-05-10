@@ -1,3 +1,5 @@
+$(document).ready(readyNow);
+
 const employees = [
   {
     name: "Atticus",
@@ -48,23 +50,26 @@ for (let emp of employees) {
 console.log("--- start of singleEmp function ---");
 
 function singleEmp(empObj) {
+  let bonus = bonusCalculation(empObj);
+
   let newEmpObj = {
     name: empObj.name,
-    bonusPercentage: 0,
-    totalCompensation: 0,
-    totalBonus: 0,
+    bonusPercentage: bonus,
+    totalCompensation:
+      Number(empObj.annualSalary) +
+      Math.round(bonus * Number(empObj.annualSalary)),
+    totalBonus: Math.round(bonus * Number(empObj.annualSalary)),
   };
-
   return newEmpObj;
 }
 //END singleEmp function
 
-console.log(singleEmp(employees[0]));
+//console.log(singleEmp(employees[2]));
 // TEST to see if employee object is targetted
 
 function bonusCalculation(empObj) {
   let bonus = 0;
-
+  // var to store the calculated bonus for certain employee
   if (empObj.reviewRating <= 2) {
     bonus = 0;
   }
@@ -77,20 +82,40 @@ function bonusCalculation(empObj) {
   if (empObj.reviewRating === 5) {
     bonus = 0.1;
   }
+  // reviewRating conditionals
   if (empObj.employeeNumber.length === 4) {
     bonus += 0.05;
   }
+  // employeeNumber conditional
   if (empObj.annualSalary > 65000) {
     bonus -= 0.01;
   }
+  // annualSalary conditional
   if (bonus > 0.13) {
     bonus = 0.13;
   }
   if (bonus < 0) {
     bonus = 0;
   }
-  return Math.round(bonus * Number(empObj.annualSalary));
+  // max and min bonus conditional
+  return bonus;
 }
 // END bonusCalculation function
 
-console.log(bonusCalculation(employees[2]));
+//console.log(bonusCalculation(employees[2]));
+
+function readyNow() {
+  $(`#moneyButton`).on(`click`, displayEmployee);
+}
+
+function displayEmployee() {
+  for (let i = 0; i < employees.length; i++) {
+    console.log(singleEmp(employees[i]));
+
+    //   $(`#employeeList`).append(
+    //     `<li>
+    //       ${employees[i].name} ${employees[i].bonusPercentage} ${employees[i].totalCompensation} ${employees[i].totalBonus}
+    //     </li>`
+    //   );
+  }
+}
